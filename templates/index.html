@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Signage</title>
+</head>
+<body>
+    <h1>Digital Signage</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Upload">
+    </form>
+    <div>
+        <h2>Files</h2>
+        {% for file in files %}
+        <div>
+            <p>{{ file.filename }} - Duration: {{ file.duration }}s</p>
+            <form action="/update_duration" method="post">
+                <input type="hidden" name="filename" value="{{ file.filename }}">
+                <input type="number" name="duration" value="{{ file.duration }}" min="1">
+                <input type="submit" value="Update">
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    <div>
+        <a href="/display" target="_blank">Start Display</a>
+    </div>
+</body>
+</html>

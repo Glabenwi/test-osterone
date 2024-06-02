@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+        }
+        img, video {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="content"></div>
+
+    <script>
+        const files = {{ files | tojson }};
+        let currentIndex = 0;
+
+        function showNextFile() {
+            const file = files[currentIndex];
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = '';
+
+            const ext = file.filename.split('.').pop().toLowerCase();
+            let element;
+
+            if (['png', 'jpg', 'jpeg', 'gif'].includes(ext)) {
+                element = document.createElement('img');
+                element.src = `/display/${file.filename}`;
+            } else if (['mp4', 'avi', 'mov'].includes(ext)) {
+                element = document.createElement('video');
+                element.src = `/display/${file.filename}`;
+                element.autoplay = true;
+                element.loop = true;
+                element.controls = true;
+            }
+
+            contentDiv.appendChild(element);
+            currentIndex = (currentIndex + 1) % files.length;
+
+            setTimeout(showNextFile, file.duration * 1000);
+        }
+
+        showNextFile();
+    </script>
+</body>
+</html>
